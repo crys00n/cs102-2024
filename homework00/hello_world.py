@@ -1,8 +1,7 @@
-"""Module providing a function printing 'hello world!'."""
+"""Module providing a function printing 'messsage'."""
 
 
 def text(message="message"):
-    """Returns string.
-    """
+    """Returns string."""
     return message
 print(text())
