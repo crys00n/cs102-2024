@@ -1,7 +1,6 @@
 """Module providing a function printing 'messsage'."""
 
 
-def text(message="message"):
+def text():
     """Returns string."""
-    return message
-print(text())
+    return "message"
