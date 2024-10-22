@@ -1,3 +1,7 @@
+"""
+This module allows to encode and decipher strings using Ceaser cipher
+"""
+
 def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     """
     Encrypts plaintext using a Caesar cipher.
@@ -11,7 +15,20 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     ''
     """
     ciphertext = ""
-    # PUT YOUR CODE HERE
+    for i in range(len(plaintext)):
+        if (plaintext[i] not in "xyzXYZ"):
+            if plaintext[i].isalpha():
+                ciphertext+=chr(ord(plaintext[i])+shift)
+            else:
+                ciphertext+=plaintext[i]
+        elif shift==0:
+            ciphertext+=plaintext[i]
+        elif plaintext[i]=="x" or plaintext[i]=="X":
+            ciphertext+=chr(ord(plaintext[i])-(26-shift))
+        elif plaintext[i]=="y" or plaintext[i]=="Y":
+            ciphertext+=chr(ord(plaintext[i])-(26-shift))
+        elif plaintext[i]=="z" or plaintext[i]=="Z":
+            ciphertext+=chr(ord(plaintext[i])-(26-shift))
     return ciphertext
 
 
@@ -27,6 +44,20 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
     >>> decrypt_caesar("")
     ''
     """
+    ciphertext.encode(encoding="utf-8")
     plaintext = ""
-    # PUT YOUR CODE HERE
+    for i in range(len(ciphertext)):
+        if (ciphertext[i] not in "ABCabc"):
+            if ciphertext[i].isalpha():
+                plaintext+=chr(ord(ciphertext[i])-shift)
+            else:
+                plaintext+=ciphertext[i]
+        elif shift==0:
+            plaintext+=ciphertext[i]
+        elif ciphertext[i]=="a" or ciphertext[i]=="A":
+            plaintext+=chr(ord(ciphertext[i])+(26-shift))
+        elif ciphertext[i]=="b" or ciphertext[i]=="B":
+            plaintext+=chr(ord(ciphertext[i])+(26-shift))
+        elif ciphertext[i]=="c" or ciphertext[i]=="C":
+            plaintext+=chr(ord(ciphertext[i])+(26-shift))
     return plaintext
