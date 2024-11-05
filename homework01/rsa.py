@@ -50,12 +50,15 @@ def multiplicative_inverse(e: int, phi: int) -> int:
     while b > 0:
         r = a % b
         divs.append(a // b)
-        a = b, b = r
-    x, y = 0, 1
+        a = b
+        b = r
+    x=0
+    y=1
     for i in range(len(divs) - 2, -1, -1):
         x1 = y
         y1 = x - y * divs[i]
-        x = x1, y = y1
+        x = x1
+        y = y1
     return y % phi
 
 
