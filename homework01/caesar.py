@@ -15,20 +15,13 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     ''
     """
     ciphertext = ""
-    for i in range(len(plaintext)):
-        if (plaintext[i] not in "xyzXYZ"):
-            if plaintext[i].isalpha():
-                ciphertext+=chr(ord(plaintext[i])+shift)
-            else:
-                ciphertext+=plaintext[i]
-        elif shift==0:
-            ciphertext+=plaintext[i]
-        elif plaintext[i]=="x" or plaintext[i]=="X":
-            ciphertext+=chr(ord(plaintext[i])-(26-shift))
-        elif plaintext[i]=="y" or plaintext[i]=="Y":
-            ciphertext+=chr(ord(plaintext[i])-(26-shift))
-        elif plaintext[i]=="z" or plaintext[i]=="Z":
-            ciphertext+=chr(ord(plaintext[i])-(26-shift))
+    for char in plaintext:
+        if "a" <= char <= "z":
+            ciphertext += chr(ord("a") + (ord(char) - ord("a") + shift) % 26)
+        elif "A" <= char <= "Z":
+            ciphertext += chr(ord("A") + (ord(char) - ord("A") + shift) % 26)
+        else:
+            ciphertext += char
     return ciphertext
 
 
@@ -44,20 +37,12 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
     >>> decrypt_caesar("")
     ''
     """
-    ciphertext.encode(encoding="utf-8")
     plaintext = ""
-    for i in range(len(ciphertext)):
-        if (ciphertext[i] not in "ABCabc"):
-            if ciphertext[i].isalpha():
-                plaintext+=chr(ord(ciphertext[i])-shift)
-            else:
-                plaintext+=ciphertext[i]
-        elif shift==0:
-            plaintext+=ciphertext[i]
-        elif ciphertext[i]=="a" or ciphertext[i]=="A":
-            plaintext+=chr(ord(ciphertext[i])+(26-shift))
-        elif ciphertext[i]=="b" or ciphertext[i]=="B":
-            plaintext+=chr(ord(ciphertext[i])+(26-shift))
-        elif ciphertext[i]=="c" or ciphertext[i]=="C":
-            plaintext+=chr(ord(ciphertext[i])+(26-shift))
+    for char in ciphertext:
+        if "a" <= char <= "z":
+            plaintext += chr(ord("a") + (ord(char) - ord("a") - shift) % 26)
+        elif "A" <= char <= "Z":
+            plaintext += chr(ord("A") + (ord(char) - ord("A") - shift) % 26)
+        else:
+            plaintext += char
     return plaintext
