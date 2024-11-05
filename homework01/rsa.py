@@ -12,8 +12,16 @@ def is_prime(n: int) -> bool:
     >>> is_prime(8)
     False
     """
-    # PUT YOUR CODE HERE
-    pass
+    if n < 2:
+        return False
+    count = 0
+    for i in range(2, n // 2 + 1):
+        if n % i == 0:
+            count += 1
+    if count == 0:
+        return True
+    else:
+        return False
 
 
 def gcd(a: int, b: int) -> int:
@@ -24,8 +32,9 @@ def gcd(a: int, b: int) -> int:
     >>> gcd(3, 7)
     1
     """
-    # PUT YOUR CODE HERE
-    pass
+    while b != 0:
+        a, b = b, a % b
+    return a
 
 
 def multiplicative_inverse(e: int, phi: int) -> int:
