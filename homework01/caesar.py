@@ -2,6 +2,7 @@
 This module allows to encode and decipher strings using Ceaser cipher
 """
 
+
 def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     """
     Encrypts plaintext using a Caesar cipher.
