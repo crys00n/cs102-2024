@@ -66,7 +66,7 @@ def get_col(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str
     ['3', '6', '9']
     """
     col = []
-    #for i in range(len(grid)):
+    # for i in range(len(grid)):
     for i in enumerate(grid):
         col += grid[i][pos[1]]
     return col
