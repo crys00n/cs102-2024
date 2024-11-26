@@ -2,6 +2,7 @@ import math
 import pathlib
 import random
 import typing as tp
+from typing import cast
 
 T = tp.TypeVar("T")
 
@@ -9,12 +10,20 @@ T = tp.TypeVar("T")
 def read_sudoku(path: tp.Union[str, pathlib.Path]) -> tp.List[tp.List[str]]:
     """Прочитать Судоку из указанного файла"""
     path = pathlib.Path(path)
-    with path.open() as f:
+    with path.open(encoding="utf-8") as f:
         puzzle = f.read()
     return create_grid(puzzle)
 
 
 def create_grid(puzzle: str) -> tp.List[tp.List[str]]:
+    """creates grid of sudoku
+
+    Args:
+        puzzle (str): values from sudoku
+
+    Returns:
+        tp.List[tp.List[str]]: list of values of sudoku
+    """
     digits = [c for c in puzzle if c in "123456789."]
     grid = group(digits, 9)
     return grid
@@ -65,9 +74,8 @@ def get_col(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str
     >>> get_col([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']], (0, 2))
     ['3', '6', '9']
     """
-    col = []
-    # for i in range(len(grid)):
-    for i in enumerate(grid):
+    col = []  # type: list
+    for i in range(len(grid)):
         col += grid[i][pos[1]]
     return col
 
@@ -82,7 +90,7 @@ def get_block(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[s
     >>> get_block(grid, (8, 8))
     ['2', '8', '.', '.', '.', '5', '.', '7', '9']
     """
-    block = []
+    block = []  # type: list
     size = int(math.sqrt(len(grid)))
     row = (pos[0] // size) * size
     col = (pos[1] // size) * size
@@ -101,9 +109,9 @@ def find_empty_positions(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.Tuple[in
     >>> find_empty_positions([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']])
     (2, 0)
     """
-    pos = tuple()
-    for i in enumerate(grid):
-        for j in enumerate(grid):
+    pos = tuple()  # type: tuple
+    for i in range(len(grid)):
+        for j in range(len(grid[i])):
             if grid[i][j] == ".":
                 pos = (i, j)
     return pos
@@ -119,7 +127,6 @@ def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -
     >>> values == {'2', '5', '9'}
     True
     """
-    row, col = pos
     row = set(get_row(grid, pos))
     col = set(get_col(grid, pos))
     block = set(get_block(grid, pos))
@@ -185,6 +192,7 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
     if N == 0:
         return grid
     solved = solve(grid)
+    solved = cast(tp.List[tp.List[str]], solved)
     emptypos = [(i, j) for i in range(9) for j in range(9)]
     random.shuffle(emptypos)
     for i, j in emptypos[: 81 - N]:
