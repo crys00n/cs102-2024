@@ -48,9 +48,7 @@ def group(values: tp.List[T], n: int) -> tp.List[tp.List[T]]:
     >>> group([1,2,3,4,5,6,7,8,9], 3)
     [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     """
-    l = [[values[j] for j in range(i * n, n + n * i)] for i in range(n)]
-    return l
-
+    return [values[i:i + n] for i in range(0, len(values), n)]
 
 def get_row(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str]:
     """Возвращает все значения для номера строки, указанной в pos
@@ -61,8 +59,7 @@ def get_row(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str
     >>> get_row([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']], (2, 0))
     ['.', '8', '9']
     """
-    row = grid[pos[0]]
-    return row
+    return grid[pos[0]]
 
 
 def get_col(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str]:
@@ -74,10 +71,7 @@ def get_col(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str
     >>> get_col([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']], (0, 2))
     ['3', '6', '9']
     """
-    col = []  # type: list
-    for i in range(len(grid)):
-        col += grid[i][pos[1]]
-    return col
+    return [grid[i][pos[1]] for i in range(len(grid))]
 
 
 def get_block(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str]:
@@ -90,14 +84,8 @@ def get_block(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[s
     >>> get_block(grid, (8, 8))
     ['2', '8', '.', '.', '.', '5', '.', '7', '9']
     """
-    block = []  # type: list
-    size = int(math.sqrt(len(grid)))
-    row = (pos[0] // size) * size
-    col = (pos[1] // size) * size
-    for i in range(row, row + size):
-        for j in range(col, col + size):
-            block += grid[i][j]
-    return block
+    block_row, block_col = pos[0] // 3 * 3, pos[1] // 3 * 3
+    return [grid[i][j] for i in range(block_row, block_row + 3) for j in range(block_col, block_col + 3)]
 
 
 def find_empty_positions(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.Tuple[int, int]]:
@@ -109,12 +97,11 @@ def find_empty_positions(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.Tuple[in
     >>> find_empty_positions([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']])
     (2, 0)
     """
-    pos = tuple()  # type: tuple
     for i in range(len(grid)):
         for j in range(len(grid[i])):
             if grid[i][j] == ".":
-                pos = (i, j)
-    return pos
+                return i, j
+    return None
 
 
 def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.Set[str]:
@@ -127,13 +114,7 @@ def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -
     >>> values == {'2', '5', '9'}
     True
     """
-    row = set(get_row(grid, pos))
-    col = set(get_col(grid, pos))
-    block = set(get_block(grid, pos))
-    all = set("123456789")
-    used = row | col | block
-    possible = all - used
-    return possible
+    return set("123456789") - (set(get_row(grid, pos)) | set(get_col(grid, pos)) | set(get_block(grid, pos)))
 
 
 def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
@@ -142,26 +123,23 @@ def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
     if not empty:
         return grid
     row, col = empty
-    possible = find_possible_values(grid, empty)
-    for value in possible:
+    for value in find_possible_values(grid, empty):
         grid[row][col] = value
-        result = solve(grid)
-        if result:
-            return result
+        if solve(grid):
+            return grid
         grid[row][col] = "."
     return None
 
 
 def check_solution(solution: tp.List[tp.List[str]]) -> bool:
     """Если решение solution верно, то вернуть True, в противном случае False"""
+    all_values = set("123456789")
     for i in range(len(solution)):
-        if len(set(get_row(solution, (i, 0)))) != len(solution) or "." in get_row(solution, (i, 0)):
-            return False
-
-        if len(set(get_col(solution, (0, i)))) != len(solution) or "." in get_col(solution, (0, i)):
-            return False
-
-        if len(set(get_block(solution, (i, i)))) != len(solution) or "." in get_block(solution, (i, i)):
+        if (
+           set(get_row(solution, (i, 0))) != all_values or
+            set(get_col(solution, (0, i))) != all_values or
+            set(get_block(solution, (i // 3 * 3, i % 3 * 3))) != all_values
+        ):
             return False
     return True
 
