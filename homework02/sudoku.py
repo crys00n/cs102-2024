@@ -48,7 +48,8 @@ def group(values: tp.List[T], n: int) -> tp.List[tp.List[T]]:
     >>> group([1,2,3,4,5,6,7,8,9], 3)
     [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     """
-    return [values[i:i + n] for i in range(0, len(values), n)]
+    return [values[i : i + n] for i in range(0, len(values), n)]
+
 
 def get_row(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str]:
     """Возвращает все значения для номера строки, указанной в pos
@@ -136,9 +137,9 @@ def check_solution(solution: tp.List[tp.List[str]]) -> bool:
     all_values = set("123456789")
     for i in range(len(solution)):
         if (
-           set(get_row(solution, (i, 0))) != all_values or
-            set(get_col(solution, (0, i))) != all_values or
-            set(get_block(solution, (i // 3 * 3, i % 3 * 3))) != all_values
+            set(get_row(solution, (i, 0))) != all_values
+            or set(get_col(solution, (0, i))) != all_values
+            or set(get_block(solution, (i // 3 * 3, i % 3 * 3))) != all_values
         ):
             return False
     return True
